@@ -4,13 +4,16 @@ import type { FrameNode, LinkTransform, Vec3 } from '../types/frame'
 const DEG2RAD = Math.PI / 180
 const RAD2DEG = 180 / Math.PI
 
+/** URDF/ROS rpy: fixed-axis Rx→Ry→Rz, Three.js equivalent order */
+export const RPY_EULER_ORDER = 'ZYX' as const
+
 export function rpyDegToMatrix4(rotation: Vec3, position: Vec3): Matrix4 {
   const m = new Matrix4()
   const euler = new Euler(
     rotation[0] * DEG2RAD,
     rotation[1] * DEG2RAD,
     rotation[2] * DEG2RAD,
-    'XYZ',
+    RPY_EULER_ORDER,
   )
   const q = new Quaternion().setFromEuler(euler)
   m.compose(new Vector3(...position), q, new Vector3(1, 1, 1))
@@ -22,7 +25,7 @@ export function matrix4ToRpyDeg(m: Matrix4): { position: Vec3; rotation: Vec3 } 
   const quat = new Quaternion()
   const scale = new Vector3()
   m.decompose(pos, quat, scale)
-  const euler = new Euler().setFromQuaternion(quat, 'XYZ')
+  const euler = new Euler().setFromQuaternion(quat, RPY_EULER_ORDER)
   return {
     position: [pos.x, pos.y, pos.z],
     rotation: [euler.x * RAD2DEG, euler.y * RAD2DEG, euler.z * RAD2DEG],

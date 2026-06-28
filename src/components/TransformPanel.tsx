@@ -70,7 +70,7 @@ export function TransformPanel() {
         />
       </div>
       <div className="hint">Parent: {parentName}</div>
-      <div className="hint">RPY 约定: intrinsic XYZ (Roll-Pitch-Yaw, 度)</div>
+      <div className="hint">RPY 约定: URDF/ROS fixed-axis XYZ (Roll-Pitch-Yaw, 度)</div>
       <Vec3Input
         label="位置"
         value={position}

@@ -1,5 +1,5 @@
 import type { FrameNode, Vec3 } from '../types/frame'
-import { computeLinkTransform } from './transforms'
+import { computeLinkTransform, matrix4ToRpyDeg, rpyDegToMatrix4 } from './transforms'
 
 function getChildren(frames: Record<string, FrameNode>, parentId: string): FrameNode[] {
   return Object.values(frames).filter((f) => f.parentId === parentId)
@@ -32,10 +32,13 @@ export function exportFramesYaml(frames: Record<string, FrameNode>): string {
   for (const frame of Object.values(frames)) {
     if (!frame.parentId) continue
     const link = computeLinkTransform(frame)
+    const { rotation: rpy } = matrix4ToRpyDeg(
+      rpyDegToMatrix4(frame.rotation, [0, 0, 0]),
+    )
     lines.push(`  ${frame.name}:`)
     lines.push(`    parent: ${frames[frame.parentId].name}`)
     lines.push(`    xyz: ${fmtVec3(frame.position)}`)
-    lines.push(`    rpy: ${fmtVec3(frame.rotation)}`)
+    lines.push(`    rpy: ${fmtVec3(rpy)}`)
     lines.push('    R:')
     lines.push(...fmtMatrixRows(link.R))
     lines.push(`    t: ${fmtVec3(link.t)}`)

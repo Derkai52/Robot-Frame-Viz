@@ -18,7 +18,7 @@
 |------|------|
 | 坐标系方向 | Z 轴朝上 (Z-up) |
 | 位置单位 | 米 (m) |
-| RPY 约定 | intrinsic XYZ (Roll-Pitch-Yaw)，单位为度 |
+| RPY 约定 | URDF/ROS fixed-axis XYZ (Roll-Pitch-Yaw)，单位为度 |
 | 外参含义 | 子坐标系相对父坐标系的变换 |
 
 ## 快速开始

@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { Html } from '@react-three/drei'
+import { Euler } from 'three'
 import type { Group } from 'three'
 import type { FrameNode } from '../types/frame'
 import { useFrameStore, getChildren } from '../store/frameStore'
+import { RPY_EULER_ORDER } from '../math/transforms'
 
 const DEG2RAD = Math.PI / 180
 
@@ -46,10 +48,13 @@ export function FrameNode3D({ frame, groupRefs }: FrameNode3DProps) {
     if (!g) return
     if (isDragging && selectedId === frame.id) return
     g.position.set(frame.position[0], frame.position[1], frame.position[2])
-    g.rotation.set(
-      frame.rotation[0] * DEG2RAD,
-      frame.rotation[1] * DEG2RAD,
-      frame.rotation[2] * DEG2RAD,
+    g.quaternion.setFromEuler(
+      new Euler(
+        frame.rotation[0] * DEG2RAD,
+        frame.rotation[1] * DEG2RAD,
+        frame.rotation[2] * DEG2RAD,
+        RPY_EULER_ORDER,
+      ),
     )
   }, [frame.position, frame.rotation, isDragging, selectedId, frame.id])
 
