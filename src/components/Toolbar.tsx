@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useFrameStore, BASELINK_ID } from '../store/frameStore'
 
 export function Toolbar() {
@@ -6,17 +7,34 @@ export function Toolbar() {
   const setMode = useFrameStore((s) => s.setMode)
   const addFrame = useFrameStore((s) => s.addFrame)
   const removeFrame = useFrameStore((s) => s.removeFrame)
-  const exportJson = useFrameStore((s) => s.exportJson)
+  const exportYaml = useFrameStore((s) => s.exportYaml)
+  const importYaml = useFrameStore((s) => s.importYaml)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   const handleExport = () => {
-    const json = exportJson()
-    const blob = new Blob([json], { type: 'application/json' })
+    const yaml = exportYaml()
+    const blob = new Blob([yaml], { type: 'application/x-yaml' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'frames.json'
+    a.download = 'frames.yaml'
     a.click()
     URL.revokeObjectURL(url)
+  }
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        importYaml(reader.result as string)
+      } catch (err) {
+        alert(err instanceof Error ? err.message : '载入失败')
+      }
+      e.target.value = ''
+    }
+    reader.readAsText(file)
   }
 
   return (
@@ -34,7 +52,9 @@ export function Toolbar() {
       >
         删除
       </button>
-      <button onClick={handleExport}>导出 JSON</button>
+      <button onClick={() => fileRef.current?.click()}>载入 YAML</button>
+      <input ref={fileRef} type="file" accept=".yaml,.yml" hidden onChange={handleImport} />
+      <button onClick={handleExport}>导出 YAML</button>
       <span className="toolbar-hint">Shift+拖拽: 从选中坐标系创建子坐标系</span>
     </div>
   )

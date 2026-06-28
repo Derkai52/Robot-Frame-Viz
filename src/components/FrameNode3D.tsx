@@ -12,8 +12,8 @@ interface FrameNode3DProps {
 }
 
 function AxisArrows() {
-  const len = 0.3
-  const r = 0.015
+  const len = 0.04
+  const r = 0.002
   return (
     <group>
       <mesh position={[len / 2, 0, 0]}>
@@ -70,7 +70,7 @@ export function FrameNode3D({ frame, groupRefs }: FrameNode3DProps) {
         <span
           style={{
             color: isSelected ? '#f39c12' : '#fff',
-            fontSize: 12,
+            fontSize: 10,
             fontWeight: isSelected ? 700 : 400,
             textShadow: '0 0 4px #000',
             whiteSpace: 'nowrap',

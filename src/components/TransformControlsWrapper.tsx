@@ -48,7 +48,7 @@ export function TransformControlsWrapper({ groupRefs, orbitRef }: Props) {
       ref={controlsRef}
       object={target}
       mode={mode}
-      size={0.8}
+      size={0.35}
     />
   )
 }

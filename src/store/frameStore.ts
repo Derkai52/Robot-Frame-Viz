@@ -2,6 +2,8 @@ import { create } from 'zustand'
 import { Matrix4 } from 'three'
 import type { FrameNode, TransformMode, Vec3 } from '../types/frame'
 import { computeWorldMatrices, matrix4ToRpyDeg } from '../math/transforms'
+import { exportFramesYaml } from '../math/exportYaml'
+import { importFramesYaml, syncFrameCounterFromFrames } from '../math/importYaml'
 
 export const BASELINK_ID = 'baselink'
 
@@ -41,7 +43,8 @@ interface FrameStore {
   updateFrame: (id: string, patch: Partial<Pick<FrameNode, 'name' | 'position' | 'rotation'>>) => void
   updateFrameFromWorld: (id: string, worldMatrix: Matrix4) => void
   removeFrame: (id: string) => void
-  exportJson: () => string
+  exportYaml: () => string
+  importYaml: (text: string) => void
   recompute: () => void
 }
 
@@ -110,9 +113,12 @@ export const useFrameStore = create<FrameStore>((set, get) => ({
     })
   },
 
-  exportJson: () => {
-    const { frames } = get()
-    return JSON.stringify(Object.values(frames), null, 2)
+  exportYaml: () => exportFramesYaml(get().frames),
+
+  importYaml: (text) => {
+    const frames = importFramesYaml(text)
+    frameCounter = syncFrameCounterFromFrames(frames)
+    set({ frames, selectedId: BASELINK_ID, worldMatrices: recomputeWorld(frames) })
   },
 
   recompute: () => {

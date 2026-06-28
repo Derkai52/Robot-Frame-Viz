@@ -11,12 +11,14 @@
   "dependencies": {
     "@react-three/drei": "^10.0.0",
     "@react-three/fiber": "^9.0.0",
+    "js-yaml": "^5.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "three": "^0.172.0",
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.172.0",
